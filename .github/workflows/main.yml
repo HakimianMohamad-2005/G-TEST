@@ -6,7 +6,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # نسخه اصلاح شده (v4)
       - uses: actions/checkout@v4
 
       - name: Set up Python
@@ -17,15 +16,17 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          # پکیج libtinfo5 حذف شد چون در اوبونتو جدید وجود ندارد
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
           pip3 install --upgrade pip
+          # بیلدوزر را به آخرین نسخه پایدار ارتقا دادیم
           pip3 install buildozer cython==0.29.36
 
       - name: Build with Buildozer
         run: |
+          # دستور yes برای تایید خودکار لایسنس‌ها
           yes | buildozer android debug
 
-      # قسمت مهم: تغییر نسخه v2 به v4 برای رفع خطا
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
