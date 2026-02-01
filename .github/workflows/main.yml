@@ -6,30 +6,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      # نسخه اصلاح شده (v4)
+      - uses: actions/checkout@v4
 
-      # 1. نصب پایتون
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.8'
+          python-version: '3.10'
 
-      # 2. نصب پیش‌نیازهای لینوکس و بیلدوزر (طبق متن راهنما)
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip openjdk-8-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
           pip3 install --upgrade pip
-          pip3 install buildozer cython==0.29.19
+          pip3 install buildozer cython==0.29.36
 
-      # 3. ساخت فایل APK
       - name: Build with Buildozer
         run: |
-          buildozer android debug
+          yes | buildozer android debug
 
-      # 4. آپلود فایل خروجی برای دانلود شما
+      # قسمت مهم: تغییر نسخه v2 به v4 برای رفع خطا
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: my-android-app
           path: bin/*.apk
